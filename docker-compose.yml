@@ -1,0 +1,33 @@
+services:
+  dislinkt-server-db:
+    image: 'postgres:13.1-alpine'
+    ports:
+      - "5436:5432"
+    container_name: dislinkt-server-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+
+  posts-api:
+    image: dislinkt/posts-api:latest
+    container_name: posts-api
+    depends_on:
+      - dislinkt-server-db
+    ports:
+      - "8082:8082"
+
+  offers-api:
+    image: dislinkt/offers-api:latest
+    container_name: offers-api
+    depends_on:
+      - dislinkt-server-db
+    ports:
+      - "8083:8083"
+
+  chat-api:
+    image: dislinkt/chat-api:latest
+    container_name: chat-api
+    depends_on:
+      - dislinkt-server-db
+    ports:
+      - "8084:8084"

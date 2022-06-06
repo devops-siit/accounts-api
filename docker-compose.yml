@@ -13,6 +13,10 @@ services:
     container_name: posts-api
     depends_on:
       - dislinkt-server-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dislinkt-server-db:5432/offers-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=12345
     ports:
       - "8082:8082"
 

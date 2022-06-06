@@ -31,3 +31,4 @@ services:
       - dislinkt-server-db
     ports:
       - "8084:8084"
+ 

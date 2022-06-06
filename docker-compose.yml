@@ -29,6 +29,10 @@ services:
     container_name: chat-api
     depends_on:
       - dislinkt-server-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dislinkt-server-db:5432/chat-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=12345
     ports:
       - "8084:8084"
  

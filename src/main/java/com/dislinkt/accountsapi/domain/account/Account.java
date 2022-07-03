@@ -24,14 +24,14 @@ public class Account extends BaseEntity {
 
     @NotNull
     @Min(0)
-    private Integer followingCount;
+    private Integer followingCount = 0;
 
     @OneToMany(mappedBy = "source")
     private Set<Follow> following;
 
     @NotNull
     @Min(0)
-    private Integer followersCount;
+    private Integer followersCount = 0;
 
     @OneToMany(mappedBy = "target")
     private Set<Follow> followers;

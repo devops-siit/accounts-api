@@ -13,11 +13,11 @@ import javax.persistence.ManyToOne;
 @Entity
 public class FollowRequest extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "source_id", nullable = false)
-    private Account source;
+    private Account sourceAccount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "target_id", nullable = false)
-    private Account target;
+    private Account targetAccount;
 }

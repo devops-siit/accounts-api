@@ -23,6 +23,7 @@ public class Profile {
     @NotNull
     @Size(max = 128)
     @Email
+    @Column(unique = true)
     private String email;
 
     @NotNull

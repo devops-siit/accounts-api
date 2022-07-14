@@ -2,10 +2,12 @@ package com.dislinkt.accountsapi.service.followrequest;
 
 import com.dislinkt.accountsapi.domain.account.Account;
 import com.dislinkt.accountsapi.domain.follow.request.FollowRequest;
+import com.dislinkt.accountsapi.exception.types.EntityAlreadyExistsException;
 import com.dislinkt.accountsapi.exception.types.EntityNotFoundException;
 import com.dislinkt.accountsapi.repository.FollowRequestRepository;
 import com.dislinkt.accountsapi.service.accounts.AccountService;
 import com.dislinkt.accountsapi.service.follow.FollowService;
+import com.dislinkt.accountsapi.web.rest.account.payload.SimpleAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,21 +28,13 @@ public class FollowRequestService {
     private FollowService followService;
 
     public void approveFollowRequest(String requestAccountUuid, String loggedUuid) {
-        Optional<Account> requestAccount = accountService.findByUuid(requestAccountUuid);
+        Account requestAccount = accountService.findByUuidOrElseThrowException(requestAccountUuid);
 
-        if (requestAccount.isEmpty()) {
-            throw new EntityNotFoundException("Requested account not found");
-        }
-
-        Optional<Account> loggedAccount = accountService.findByUuid(loggedUuid);
-
-        if (loggedAccount.isEmpty()) {
-            throw new EntityNotFoundException("Logged account not found");
-        }
+        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUuid);
 
         Optional<FollowRequest> followRequest =
-                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.get().getId(),
-                        loggedAccount.get().getId());
+                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(loggedAccount.getId(),
+                        requestAccount.getId());
 
         if (followRequest.isEmpty()) {
             throw new EntityNotFoundException("Follow request not found");
@@ -48,46 +42,38 @@ public class FollowRequestService {
 
         followRequestRepository.delete(followRequest.get());
 
-        followService.insertFollow(requestAccount.get(), loggedAccount.get());
+        followService.insertFollow(requestAccount, loggedAccount);
     }
 
     public void insertFollowRequest(String requestAccountUuid, String loggedUuid) {
-        Optional<Account> requestAccount = accountService.findByUuid(requestAccountUuid);
+        Account requestAccount = accountService.findByUuidOrElseThrowException(requestAccountUuid);
 
-        if (requestAccount.isEmpty()) {
-            throw new EntityNotFoundException("Requested account not found");
-        }
+        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUuid);
 
-        Optional<Account> loggedAccount = accountService.findByUuid(loggedUuid);
+        Optional<FollowRequest> followRequestOrEmpty =
+                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.getId(),
+                        loggedAccount.getId());
 
-        if (loggedAccount.isEmpty()) {
-            throw new EntityNotFoundException("Logged account not found");
+        if (followRequestOrEmpty.isPresent()) {
+            throw new EntityAlreadyExistsException("Follow request already added");
         }
 
         FollowRequest followRequest = new FollowRequest();
 
-        followRequest.setSourceAccount(loggedAccount.get());
-        followRequest.setTargetAccount(requestAccount.get());
+        followRequest.setSourceAccount(loggedAccount);
+        followRequest.setTargetAccount(requestAccount);
 
         followRequestRepository.save(followRequest);
     }
 
     public void declineFollowRequest(String requestAccountUuid, String loggedUuid) {
-        Optional<Account> requestAccount = accountService.findByUuid(requestAccountUuid);
+        Account requestAccount = accountService.findByUuidOrElseThrowException(requestAccountUuid);
 
-        if (requestAccount.isEmpty()) {
-            throw new EntityNotFoundException("Requested account not found");
-        }
-
-        Optional<Account> loggedAccount = accountService.findByUuid(loggedUuid);
-
-        if (loggedAccount.isEmpty()) {
-            throw new EntityNotFoundException("Logged account not found");
-        }
+        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUuid);
 
         Optional<FollowRequest> followRequest =
-                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.get().getId(),
-                        loggedAccount.get().getId());
+                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.getId(),
+                        loggedAccount.getId());
 
         if (followRequest.isEmpty()) {
             throw new EntityNotFoundException("Follow request not found");
@@ -96,16 +82,20 @@ public class FollowRequestService {
         followRequestRepository.delete(followRequest.get());
     }
 
-    public Page<FollowRequest> findByTargetAccount(String loggedUid, Pageable pageable) {
-        Optional<Account> loggedAccount = accountService.findByUuid(loggedUid);
-
-        if (loggedAccount.isEmpty()) {
-            throw new EntityNotFoundException("Logged account not found");
-        }
+    public Page<SimpleAccountDTO> findByTargetAccount(String loggedUid, Pageable pageable) {
+        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUid);
 
         Page<FollowRequest> followRequests =
-                followRequestRepository.findByTargetAccountId(loggedAccount.get().getId(), pageable);
+                followRequestRepository.findByTargetAccountId(loggedAccount.getId(), pageable);
 
-        return followRequests;
+        return followRequests.map(followRequest -> {
+            SimpleAccountDTO simpleAccountDTO = new SimpleAccountDTO();
+
+            simpleAccountDTO.setUsername(followRequest.getSourceAccount().getUsername());
+            simpleAccountDTO.setName(followRequest.getSourceAccount().getProfile().getName());
+            simpleAccountDTO.setUuid(followRequest.getSourceAccount().getUuid());
+
+            return simpleAccountDTO;
+        });
     }
 }

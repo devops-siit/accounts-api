@@ -5,13 +5,11 @@ import com.dislinkt.accountsapi.domain.follow.Follow;
 import com.dislinkt.accountsapi.exception.types.EntityNotFoundException;
 import com.dislinkt.accountsapi.repository.AccountRepository;
 import com.dislinkt.accountsapi.repository.FollowRepository;
-import com.dislinkt.accountsapi.util.ReturnResponse;
+import com.dislinkt.accountsapi.web.rest.account.payload.SimpleAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
@@ -33,8 +31,8 @@ public class FollowService {
         followRepository.save(follow);
     }
 
-    public Page<Follow> findByTargetAccount(@PathVariable String accountUuid,
-                                                            Pageable pageable) {
+    public Page<SimpleAccountDTO> findByTargetAccount(String accountUuid,
+                                                      Pageable pageable) {
 
         Optional<Account> account = accountRepository.findByUuid(accountUuid);
 
@@ -42,11 +40,18 @@ public class FollowService {
             throw new EntityNotFoundException("Account not found");
         }
 
-        return followRepository.findByTargetAccountId(account.get().getId(), pageable);
+        return followRepository.findByTargetAccountId(account.get().getId(), pageable).map(follow -> {
+            SimpleAccountDTO dto = new SimpleAccountDTO();
+            dto.setUsername(follow.getTargetAccount().getUsername());
+            dto.setName(follow.getTargetAccount().getProfile().getName());
+            dto.setUuid(follow.getTargetAccount().getUuid());
+
+            return dto;
+        });
     }
 
-    public Page<Follow> findBySourceAccount(@PathVariable String accountUuid,
-                                            Pageable pageable) {
+    public Page<SimpleAccountDTO> findBySourceAccount(String accountUuid,
+                                                      Pageable pageable) {
 
         Optional<Account> account = accountRepository.findByUuid(accountUuid);
 
@@ -54,6 +59,13 @@ public class FollowService {
             throw new EntityNotFoundException("Account not found");
         }
 
-        return followRepository.findBySourceAccountId(account.get().getId(), pageable);
+        return followRepository.findBySourceAccountId(account.get().getId(), pageable).map(follow -> {
+            SimpleAccountDTO dto = new SimpleAccountDTO();
+            dto.setUsername(follow.getTargetAccount().getUsername());
+            dto.setName(follow.getTargetAccount().getProfile().getName());
+            dto.setUuid(follow.getTargetAccount().getUuid());
+
+            return dto;
+        });
     }
 }

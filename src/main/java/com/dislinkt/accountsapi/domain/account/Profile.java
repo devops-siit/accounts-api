@@ -45,9 +45,17 @@ public class Profile {
     @NotNull
     private Boolean isPublic = true;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "account")
     private Set<Education> education;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "account")
     private Set<Work> workExperience;
+    
+    public void addEducation(Education education) {
+    	this.education.add(education);
+    }
+    
+    public void addWorkExperience(Work experience) {
+    	this.workExperience.add(experience);
+    }
 }

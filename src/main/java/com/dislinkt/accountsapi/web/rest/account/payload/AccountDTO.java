@@ -1,10 +1,12 @@
 package com.dislinkt.accountsapi.web.rest.account.payload;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
 import com.dislinkt.accountsapi.domain.account.Gender;
 import com.dislinkt.accountsapi.web.rest.base.BaseDTO;
-import lombok.Data;
 
-import java.time.LocalDateTime;
+import lombok.Data;
 
 @Data
 public class AccountDTO extends BaseDTO {
@@ -28,4 +30,8 @@ public class AccountDTO extends BaseDTO {
     private Integer followingCount = 0;
 
     private Integer followersCount = 0;
+    
+    private Set<EducationDTO> education;
+    
+    private Set<WorkDTO> workExperience;
 }

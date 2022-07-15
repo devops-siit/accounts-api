@@ -1,5 +1,6 @@
 package com.dislinkt.accountsapi.web.rest.account.payload;
 
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import com.dislinkt.accountsapi.domain.account.Gender;
 import com.dislinkt.accountsapi.web.rest.base.BaseDTO;
 
 import lombok.Data;
+
 
 @Data
 public class AccountDTO extends BaseDTO {
@@ -34,4 +36,5 @@ public class AccountDTO extends BaseDTO {
     private Set<EducationDTO> education;
     
     private Set<WorkDTO> workExperience;
+
 }

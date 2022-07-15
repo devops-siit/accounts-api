@@ -8,6 +8,7 @@ import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountReque
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationRequest;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,4 +72,5 @@ public class AccountResource {
     	return ReturnResponse.entityCreated(accountService.deleteEducation(uuid, accountUuid));
     
     }
+
 }

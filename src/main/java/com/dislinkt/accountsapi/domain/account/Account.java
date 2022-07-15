@@ -2,7 +2,8 @@ package com.dislinkt.accountsapi.domain.account;
 
 import com.dislinkt.accountsapi.domain.base.BaseEntity;
 import com.dislinkt.accountsapi.domain.follow.Follow;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -10,8 +11,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-@Data
 @Entity
+@Getter
+@Setter
 public class Account extends BaseEntity {
 
     @NotNull
@@ -24,19 +26,19 @@ public class Account extends BaseEntity {
 
     @NotNull
     @Min(0)
-    private Integer followingCount;
+    private Integer followingCount = 0;
 
-    @OneToMany(mappedBy = "source")
+    @OneToMany(mappedBy = "sourceAccount", fetch = FetchType.LAZY)
     private Set<Follow> following;
 
     @NotNull
     @Min(0)
-    private Integer followersCount;
+    private Integer followersCount = 0;
 
-    @OneToMany(mappedBy = "target")
+    @OneToMany(mappedBy = "targetAccount", fetch = FetchType.LAZY)
     private Set<Follow> followers;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "blocked_accounts",
             uniqueConstraints = @UniqueConstraint(name = "UniqueBlock",
                     columnNames = {"target", "blocked"}),

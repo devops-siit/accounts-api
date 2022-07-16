@@ -1,14 +1,8 @@
 package com.dislinkt.accountsapi.service.accounts;
 
-import com.dislinkt.accountsapi.domain.account.Account;
-import com.dislinkt.accountsapi.domain.account.Profile;
-import com.dislinkt.accountsapi.exception.types.EntityAlreadyExistsException;
-import com.dislinkt.accountsapi.exception.types.EntityNotFoundException;
-import com.dislinkt.accountsapi.repository.AccountRepository;
-import com.dislinkt.accountsapi.web.rest.account.payload.AccountDTO;
-import com.dislinkt.accountsapi.web.rest.account.payload.SimpleAccountDTO;
-import com.dislinkt.accountsapi.web.rest.account.payload.request.EditProfileRequest;
-import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountRequest;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +13,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
+import com.dislinkt.accountsapi.domain.account.Account;
+import com.dislinkt.accountsapi.domain.account.Profile;
+import com.dislinkt.accountsapi.domain.account.education.Education;
+import com.dislinkt.accountsapi.domain.account.work.Work;
+import com.dislinkt.accountsapi.exception.types.EntityAlreadyExistsException;
+import com.dislinkt.accountsapi.exception.types.EntityNotFoundException;
+import com.dislinkt.accountsapi.repository.AccountRepository;
+import com.dislinkt.accountsapi.service.education.EducationService;
+import com.dislinkt.accountsapi.service.work.WorkService;
+import com.dislinkt.accountsapi.web.rest.account.payload.AccountDTO;
+import com.dislinkt.accountsapi.web.rest.account.payload.EducationDTO;
+import com.dislinkt.accountsapi.web.rest.account.payload.SimpleAccountDTO;
+import com.dislinkt.accountsapi.web.rest.account.payload.WorkDTO;
+import com.dislinkt.accountsapi.web.rest.account.payload.request.EditProfileRequest;
+import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountRequest;
+import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationRequest;
+import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
+
 
 @Service
 public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    
+    @Autowired
+    private EducationService educationService;
+    
+    @Autowired
+    private WorkService workService;
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -125,6 +144,12 @@ public class AccountService {
         accountDTO.setName(account.getProfile().getName());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
+        
+        // set educations
+        accountDTO.setEducation(educationService.toDTOset(account.getProfile().getEducation()));
+        // set work experience
+        accountDTO.setWorkExperience(workService.toDTOset(account.getProfile().getWorkExperience()));
+
 
         return accountDTO;
     }
@@ -165,5 +190,108 @@ public class AccountService {
 
         return accountDTO;
     }
+
+    
+    public AccountDTO insertEducation(NewEducationRequest request, String accountUuid) {
+    	
+    	Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+
+        if (accountOrEmpty.isEmpty()) {
+            throw new EntityNotFoundException("Account not found");
+        }
+
+        Account account = accountOrEmpty.get();
+        EducationDTO savedEducation = educationService.insertEducation(request, account);
+        
+        Education education = educationService.findOneByUuidOrElseThrowException(savedEducation.getUuid()); 
+        account.getProfile().addEducation(education);
+        accountRepository.save(account);
+        
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setUsername(account.getUsername());
+        accountDTO.setUuid(account.getUuid());
+        accountDTO.setEmail(account.getProfile().getEmail());
+        accountDTO.setGender(account.getProfile().getGender());
+        accountDTO.setPhone(account.getProfile().getPhone());
+        accountDTO.setUsername(accountDTO.getUsername());
+        accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
+        accountDTO.setName(account.getProfile().getName());
+        accountDTO.setFollowersCount(account.getFollowersCount());
+        accountDTO.setFollowingCount(account.getFollowingCount());
+        
+        accountDTO.setEducation(educationService.toDTOset(account.getProfile().getEducation()));
+        accountDTO.setWorkExperience(workService.toDTOset(account.getProfile().getWorkExperience()));
+
+        
+    	return accountDTO;
+    }
+    
+    
+    public AccountDTO insertWork(NewWorkRequest request, String accountUuid) {
+    	Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+
+        if (accountOrEmpty.isEmpty()) {
+            throw new EntityNotFoundException("Account not found");
+        }
+
+        Account account = accountOrEmpty.get();
+        WorkDTO savedWork = workService.insertWorkExperience(request, account);
+        
+        Work work = workService.findOneByUuidOrElseThrowException(savedWork.getUuid()); 
+        account.getProfile().addWorkExperience(work);
+        accountRepository.save(account);
+        
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setUsername(account.getUsername());
+        accountDTO.setUuid(account.getUuid());
+        accountDTO.setEmail(account.getProfile().getEmail());
+        accountDTO.setGender(account.getProfile().getGender());
+        accountDTO.setPhone(account.getProfile().getPhone());
+        accountDTO.setUsername(accountDTO.getUsername());
+        accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
+        accountDTO.setName(account.getProfile().getName());
+        accountDTO.setFollowersCount(account.getFollowersCount());
+        accountDTO.setFollowingCount(account.getFollowingCount());
+        
+        accountDTO.setEducation(educationService.toDTOset(account.getProfile().getEducation()));
+        accountDTO.setWorkExperience(workService.toDTOset(account.getProfile().getWorkExperience()));
+        
+    	return accountDTO;
+    }
+
+	public AccountDTO deleteEducation(String uuid, String accountUuid) {
+		
+		Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+
+        if (accountOrEmpty.isEmpty()) {
+            throw new EntityNotFoundException("Account not found");
+        }
+
+        
+        educationService.deleteEducation(uuid); 
+        
+        AccountDTO accDTO = findDTOByUuidOrElseThrowException(accountUuid);
+
+        return accDTO;
+	}
+
+	public AccountDTO deleteWorkExperience(String uuid, String accountUuid) {
+		
+		Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+
+        if (accountOrEmpty.isEmpty()) {
+            throw new EntityNotFoundException("Account not found");
+        }
+
+        
+        workService.deleteWorkExperience(uuid); 
+        
+        AccountDTO accDTO = findDTOByUuidOrElseThrowException(accountUuid);
+
+        return accDTO;
+	}
+    
+      
+
 }
 

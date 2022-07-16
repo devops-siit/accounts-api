@@ -66,13 +66,13 @@ public class AccountService {
         HttpEntity<SimpleAccountDTO> accountRequest = new HttpEntity<>(simpleAccountDTO);
 
         ResponseEntity<SimpleAccountDTO> responseFromPosts =
-                restTemplate.exchange("http://localhost:8082/accounts",
+                restTemplate.exchange("http://POSTS-API/accounts",
                         HttpMethod.POST,
                         accountRequest,
                         SimpleAccountDTO.class);
 
         ResponseEntity<SimpleAccountDTO> responseFromChats =
-                restTemplate.exchange("http://localhost:8084/accounts",
+                restTemplate.exchange("http://CHAT-API/accounts",
                         HttpMethod.POST,
                         accountRequest,
                         SimpleAccountDTO.class);

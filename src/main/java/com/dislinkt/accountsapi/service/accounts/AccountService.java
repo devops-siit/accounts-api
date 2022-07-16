@@ -1,6 +1,5 @@
 package com.dislinkt.accountsapi.service.accounts;
 
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,20 +30,17 @@ import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountReque
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationRequest;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 
-
 @Service
 public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
-
     
     @Autowired
     private EducationService educationService;
     
     @Autowired
     private WorkService workService;
-
 
     @Autowired
     private RestTemplate restTemplate;
@@ -85,13 +81,19 @@ public class AccountService {
         HttpEntity<SimpleAccountDTO> accountRequest = new HttpEntity<>(simpleAccountDTO);
 
         ResponseEntity<SimpleAccountDTO> responseFromPosts =
-                restTemplate.exchange("http://localhost:8082/accounts",
+                restTemplate.exchange("http://posts-api:8082/accounts",
                         HttpMethod.POST,
                         accountRequest,
                         SimpleAccountDTO.class);
 
         ResponseEntity<SimpleAccountDTO> responseFromChats =
-                restTemplate.exchange("http://localhost:8084/accounts",
+                restTemplate.exchange("http://chat-api:8084/accounts",
+                        HttpMethod.POST,
+                        accountRequest,
+                        SimpleAccountDTO.class);
+        
+        ResponseEntity<SimpleAccountDTO> responseFromAgent =
+                restTemplate.exchange("http://agent-api:8089/accounts",
                         HttpMethod.POST,
                         accountRequest,
                         SimpleAccountDTO.class);
@@ -150,7 +152,6 @@ public class AccountService {
         // set work experience
         accountDTO.setWorkExperience(workService.toDTOset(account.getProfile().getWorkExperience()));
 
-
         return accountDTO;
     }
 
@@ -190,7 +191,6 @@ public class AccountService {
 
         return accountDTO;
     }
-
     
     public AccountDTO insertEducation(NewEducationRequest request, String accountUuid) {
     	
@@ -292,6 +292,5 @@ public class AccountService {
 	}
     
       
-
 }
 

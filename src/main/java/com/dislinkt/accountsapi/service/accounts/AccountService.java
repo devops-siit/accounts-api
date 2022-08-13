@@ -2,15 +2,13 @@ package com.dislinkt.accountsapi.service.accounts;
 
 import java.util.Optional;
 
+import com.dislinkt.accountsapi.event.AccountCreatedEvent;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.RestTemplate;
 
 import com.dislinkt.accountsapi.domain.account.Account;
 import com.dislinkt.accountsapi.domain.account.Profile;
@@ -23,7 +21,6 @@ import com.dislinkt.accountsapi.service.education.EducationService;
 import com.dislinkt.accountsapi.service.work.WorkService;
 import com.dislinkt.accountsapi.web.rest.account.payload.AccountDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.EducationDTO;
-import com.dislinkt.accountsapi.web.rest.account.payload.SimpleAccountDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.WorkDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.EditProfileRequest;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountRequest;
@@ -43,7 +40,7 @@ public class AccountService {
     private WorkService workService;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private RabbitTemplate rabbitTemplate;
 
     @PostMapping
     public AccountDTO insertAccount(NewAccountRequest request) {
@@ -73,30 +70,11 @@ public class AccountService {
         account.setProfile(profile);
         accountRepository.save(account);
 
-        SimpleAccountDTO simpleAccountDTO = new SimpleAccountDTO();
-        simpleAccountDTO.setName(account.getProfile().getName());
-        simpleAccountDTO.setUsername(account.getUsername());
-        simpleAccountDTO.setUuid(account.getUuid());
+        AccountCreatedEvent accountCreatedEvent = new AccountCreatedEvent(account.getUuid(),
+                account.getUsername(),
+                account.getProfile().getName());
 
-        HttpEntity<SimpleAccountDTO> accountRequest = new HttpEntity<>(simpleAccountDTO);
-
-        ResponseEntity<SimpleAccountDTO> responseFromPosts =
-                restTemplate.exchange("http://posts-api:8082/accounts",
-                        HttpMethod.POST,
-                        accountRequest,
-                        SimpleAccountDTO.class);
-
-        ResponseEntity<SimpleAccountDTO> responseFromChats =
-                restTemplate.exchange("http://chat-api:8084/accounts",
-                        HttpMethod.POST,
-                        accountRequest,
-                        SimpleAccountDTO.class);
-        
-        ResponseEntity<SimpleAccountDTO> responseFromAgent =
-                restTemplate.exchange("http://agent-api:8089/accounts",
-                        HttpMethod.POST,
-                        accountRequest,
-                        SimpleAccountDTO.class);
+        rabbitTemplate.convertAndSend("x.account-registration", "", accountCreatedEvent);
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername(account.getUsername());

@@ -3,10 +3,13 @@ package com.dislinkt.accountsapi.service.accounts;
 import java.util.Optional;
 
 import com.dislinkt.accountsapi.event.AccountCreatedEvent;
+import com.dislinkt.accountsapi.source.AccountRegistrationSource;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -28,6 +31,7 @@ import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationReq
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 
 @Service
+@EnableBinding(AccountRegistrationSource.class)
 public class AccountService {
 
     @Autowired
@@ -40,9 +44,8 @@ public class AccountService {
     private WorkService workService;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    AccountRegistrationSource accountRegistrationSource;
 
-    @PostMapping
     public AccountDTO insertAccount(NewAccountRequest request) {
         Optional<Account> accountOrEmpty = accountRepository.findOneByUsername(request.getUsername());
 
@@ -74,7 +77,7 @@ public class AccountService {
                 account.getUsername(),
                 account.getProfile().getName());
 
-        rabbitTemplate.convertAndSend("x.account-registration", "", accountCreatedEvent);
+        accountRegistrationSource.accountRegistration().send(MessageBuilder.withPayload(accountCreatedEvent).build());
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername(account.getUsername());

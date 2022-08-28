@@ -5,6 +5,7 @@ import com.dislinkt.accountsapi.domain.base.BaseEntity;
 import com.dislinkt.accountsapi.domain.base.DateRange;
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;

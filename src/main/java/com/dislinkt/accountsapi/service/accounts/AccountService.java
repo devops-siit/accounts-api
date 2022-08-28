@@ -169,6 +169,7 @@ public class AccountService {
         accountDTO.setName(account.getProfile().getName());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
+        accountDTO.setBiography(account.getProfile().getBiography());
 
         return accountDTO;
     }

@@ -6,6 +6,11 @@ import static com.dislinkt.accountsapi.constants.EducationConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.dislinkt.accountsapi.source.AccountRegistrationSource;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,13 +33,25 @@ import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 import com.dislinkt.accountsapi.web.rest.base.DateRangeDTO;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AccountServiceIntegrationTest {
 	
 	@Autowired
 	private AccountService service;
-	
 
-	
+	@Mock
+	private AccountRegistrationSource accountRegistrationSource;
+
+	@BeforeAll
+	public void init() {
+		Mockito.when(accountRegistrationSource.accountRegistration()).thenReturn(new MessageChannel() {
+			@Override
+			public boolean send(Message<?> message, long timeout) {
+				return true;
+			}
+		});
+	}
+
 	@Test
 	public void testFindByUuid() throws Exception {
 		

@@ -44,7 +44,7 @@ public class AccountService {
     private WorkService workService;
 
     @Autowired
-    AccountRegistrationSource accountRegistrationSource;
+    private AccountRegistrationSource accountRegistrationSource;
 
     public AccountDTO insertAccount(NewAccountRequest request) {
         Optional<Account> accountOrEmpty = accountRepository.findOneByUsername(request.getUsername());

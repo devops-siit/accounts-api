@@ -65,6 +65,7 @@ public class WorkService {
 		retVal.setDescription(existing.getDescription());
 		retVal.setPosition(existing.getPosition());
 		retVal.setDuration(dateRange);
+		retVal.setUuid(existing.getUuid());
 		
 		return retVal;
 	}

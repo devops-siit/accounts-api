@@ -58,4 +58,8 @@ public class Profile {
     public void addWorkExperience(Work experience) {
     	this.workExperience.add(experience);
     }
+    
+    public void removeEducation(Education education) {
+    	this.education.remove(education);
+    }
 }

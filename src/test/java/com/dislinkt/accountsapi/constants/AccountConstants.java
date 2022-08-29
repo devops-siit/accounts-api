@@ -25,8 +25,12 @@ public class AccountConstants {
 	public static final String DB_ACCOUNT_USERNAME_2 = "coco";
 	public static final boolean DB_ACCOUNT_IS_PUBLIC_2 = true;
 	
+	// Elon Musk private
+	public static final String DB_ACCOUNT_UUID_3 = "7c20fb12-60d8-4322-ba33-9c05203868e9";
 	
-	public static final Long NEW_ACCOUNT_ID= 4L;
+	public static final String DB_ACCOUNT_UUID_4 = "7c20fb12-70d8-4322-ba33-9c05203868e9";
+	
+	public static final Long NEW_ACCOUNT_ID= 5L;
 	public static final String NEW_ACCOUNT_EMAIL = "newaccount@gmail.com";
 	public static final String NEW_ACCOUNT_NAME = "New Account";
 	public static final String NEW_ACCOUNT_USERNAME = "newaccount";
@@ -37,7 +41,7 @@ public class AccountConstants {
 	public static final boolean NEW_ACCOUNT_IS_PUBLIC = true;
 	
 	public static final String DB_ACCOUNT_EMAIL_DoesntExist = "doesntexist@gmail.com";
-	public static final int DB_ACCOUNT_SIZE = 3;
+	public static final int DB_ACCOUNT_SIZE = 4;
 	public static final String DB_ACCOUNT_UUID_DoesntExist = "7c20fb12-50d8-4322-ba33-99999999";
 
 	public static final Long  DB_ACCOUNT_ID_DoesntActive = 7L;

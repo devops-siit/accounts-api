@@ -5,7 +5,7 @@ import java.time.Month;
 
 public class EducationConstants {
 
-	public static final String DB_EDU_NAME = "High School";
+	public static final String DB_EDU_NAME = "High school";
 	public static final String DB_EDU_TITLE = "none";
 	public static final String DB_EDU_DESCRIPTION = "4 years";
 	public static final LocalDateTime DB_EDU_START_DATE = LocalDateTime.of(2005, Month.APRIL, 21, 0, 0, 0);

@@ -10,6 +10,7 @@ import com.dislinkt.accountsapi.source.AccountRegistrationSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,7 @@ import com.dislinkt.accountsapi.web.rest.base.DateRangeDTO;
 public class AccountServiceIntegrationTest {
 	
 	@Autowired
+	@InjectMocks
 	private AccountService service;
 
 	@Mock

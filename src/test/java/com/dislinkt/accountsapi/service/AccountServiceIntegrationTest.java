@@ -3,32 +3,21 @@ import static com.dislinkt.accountsapi.constants.AccountConstants.*;
 import static com.dislinkt.accountsapi.constants.WorkConstants.*;
 import static com.dislinkt.accountsapi.constants.EducationConstants.*;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.RabbitMQContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.dislinkt.accountsapi.domain.account.Account;
-import com.dislinkt.accountsapi.domain.base.DateRange;
 import com.dislinkt.accountsapi.service.accounts.AccountService;
-import com.dislinkt.accountsapi.service.education.EducationService;
-import com.dislinkt.accountsapi.service.work.WorkService;
 import com.dislinkt.accountsapi.web.rest.account.payload.AccountDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.EditProfileRequest;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountRequest;
@@ -36,25 +25,13 @@ import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationReq
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 import com.dislinkt.accountsapi.web.rest.base.DateRangeDTO;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application.yml")
-@Testcontainers
 public class AccountServiceIntegrationTest {
 	
 	@Autowired
 	private AccountService service;
 	
 
-	
-	@Container
-    static RabbitMQContainer rabbitContainer = new RabbitMQContainer("rabbitmq:3.7.25-management-alpine");
-
-	@DynamicPropertySource
-	static void configure(DynamicPropertyRegistry registry) {
-		registry.add("spring.rabbitmq.host", rabbitContainer::getHost);
-		registry.add("spring.rabbitmq.port", rabbitContainer::getAmqpPort);
-	}
 	
 	@Test
 	public void testFindByUuid() throws Exception {

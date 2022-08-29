@@ -1,8 +1,19 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test-db
+    url: jdbc:h2:mem:account-db
     driverClassName: org.h2.Driver
     username: sa
     password: password
+    platform: h2
+  h2:
+    console:
+      enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        ddl-auto: create
+
+
+

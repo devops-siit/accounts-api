@@ -44,7 +44,7 @@ public class AccountService {
     private WorkService workService;
 
     @Autowired
-    AccountRegistrationSource accountRegistrationSource;
+    private AccountRegistrationSource accountRegistrationSource;
 
     public AccountDTO insertAccount(NewAccountRequest request) {
         Optional<Account> accountOrEmpty = accountRepository.findOneByUsername(request.getUsername());
@@ -169,6 +169,7 @@ public class AccountService {
         accountDTO.setName(account.getProfile().getName());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
+        accountDTO.setBiography(account.getProfile().getBiography());
 
         return accountDTO;
     }

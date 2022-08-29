@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +50,7 @@ public class AccountServiceIntegrationTest {
 
 	@BeforeAll
 	public void init() {
+		MockitoAnnotations.initMocks(this);
 		Mockito.when(accountRegistrationSource.accountRegistration()).thenReturn(new MessageChannel() {
 			@Override
 			public boolean send(Message<?> message, long timeout) {

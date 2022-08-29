@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.dislinkt.accountsapi.source.AccountRegistrationSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dislinkt.accountsapi.domain.account.Account;
@@ -33,6 +35,7 @@ import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 import com.dislinkt.accountsapi.web.rest.base.DateRangeDTO;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@RunWith(SpringRunner.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AccountServiceIntegrationTest {
 	

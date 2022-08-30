@@ -86,6 +86,7 @@ public class EducationService {
 		retVal.setDescription(existing.getDescription());
 		retVal.setTitle(existing.getTitle());
 		retVal.setDuration(dateRange);
+		retVal.setUuid(existing.getUuid());
 		
 		return retVal;
 		

@@ -206,8 +206,8 @@ public class AccountServiceIntegrationTest {
 		AccountDTO acc = service.insertWork(req, DB_WORK_ACCOUNT_UUID);
 		assertEquals(2, acc.getWorkExperience().size());
 	}
-/*	ovi testovi ne prolaze
- 
+//	ovi testovi ne prolaze
+ /*
 	@Test
 	@Transactional
 	@Rollback(true)
@@ -226,6 +226,6 @@ public class AccountServiceIntegrationTest {
 		
 		assertEquals(0, acc.getWorkExperience().size());
 	}
-	
 */
+
 }

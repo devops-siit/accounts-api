@@ -3,15 +3,13 @@ package com.dislinkt.accountsapi.service.accounts;
 import java.util.Optional;
 
 import com.dislinkt.accountsapi.event.AccountCreatedEvent;
-import com.dislinkt.accountsapi.source.AccountRegistrationSource;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.dislinkt.accountsapi.domain.account.Account;
 import com.dislinkt.accountsapi.domain.account.Profile;
@@ -26,12 +24,11 @@ import com.dislinkt.accountsapi.web.rest.account.payload.AccountDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.EducationDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.WorkDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.EditProfileRequest;
-import com.dislinkt.accountsapi.web.rest.account.payload.request.NewAccountRequest;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationRequest;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewWorkRequest;
 
 @Service
-@EnableBinding(AccountRegistrationSource.class)
+@EnableBinding(Sink.class)
 public class AccountService {
 
     @Autowired
@@ -43,53 +40,33 @@ public class AccountService {
     @Autowired
     private WorkService workService;
 
-    @Autowired
-    private AccountRegistrationSource accountRegistrationSource;
-
-    public AccountDTO insertAccount(NewAccountRequest request) {
-        Optional<Account> accountOrEmpty = accountRepository.findOneByUsername(request.getUsername());
+    @StreamListener(target = Sink.INPUT)
+    public void insertAccount(AccountCreatedEvent event) {
+        Optional<Account> accountOrEmpty = accountRepository.findOneByUsername(event.getUsername());
 
         if (accountOrEmpty.isPresent()) {
             throw new EntityAlreadyExistsException("Account username already exist");
         }
 
-        accountOrEmpty = accountRepository.findOneByProfileEmail(request.getEmail());
+        accountOrEmpty = accountRepository.findOneByProfileEmail(event.getEmail());
 
         if (accountOrEmpty.isPresent()) {
             throw new EntityAlreadyExistsException("Account email already exist");
         }
 
         Account account = new Account();
-        account.setUsername(request.getUsername());
-        account.setUuid(request.getUuid());
+        account.setUsername(event.getUsername());
+        account.setUuid(event.getUuid());
 
         Profile profile = new Profile();
-        profile.setName(request.getName());
-        profile.setEmail(request.getEmail());
-        profile.setGender(request.getGender());
-        profile.setDateOfBirth(request.getDateOfBirth());
-        profile.setPhone(request.getPhone());
+        profile.setName(event.getName());
+        profile.setEmail(event.getEmail());
+        profile.setGender(event.getGender());
+        profile.setDateOfBirth(event.getDateOfBirth());
+        profile.setPhone(event.getPhone());
 
         account.setProfile(profile);
         accountRepository.save(account);
-
-        AccountCreatedEvent accountCreatedEvent = new AccountCreatedEvent(account.getUuid(),
-                account.getUsername(),
-                account.getProfile().getName());
-
-        accountRegistrationSource.accountRegistration().send(MessageBuilder.withPayload(accountCreatedEvent).build());
-
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setUsername(account.getUsername());
-        accountDTO.setUuid(account.getUuid());
-        accountDTO.setEmail(account.getProfile().getEmail());
-        accountDTO.setGender(account.getProfile().getGender());
-        accountDTO.setPhone(account.getProfile().getPhone());
-        accountDTO.setUsername(accountDTO.getUsername());
-        accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
-        accountDTO.setName(account.getProfile().getName());
-
-        return accountDTO;
     }
 
     public Page<AccountDTO> findByUsernameContainsOrNameContains(String pattern, Pageable pageable) {
@@ -273,6 +250,8 @@ public class AccountService {
         return accDTO;
 	}
     
-      
+    public Optional<Account> findOneByUsername(String username) {
+        return accountRepository.findOneByUsername(username);
+    }
 }
 

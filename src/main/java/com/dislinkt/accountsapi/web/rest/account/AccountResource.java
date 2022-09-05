@@ -33,36 +33,33 @@ public class AccountResource {
     }
 
     @PutMapping
-    public ResponseEntity<AccountDTO> editProfile(@RequestBody EditProfileRequest request,
-                                               @RequestParam String accountUuid) {
+    public ResponseEntity<AccountDTO> editProfile(@RequestBody EditProfileRequest request) {
 
-        return ReturnResponse.entityUpdated(accountService.editProfile(accountUuid, request));
+        return ReturnResponse.entityUpdated(accountService.editProfile(request));
     }
     
     @PostMapping("/education")
-    public ResponseEntity<AccountDTO> insertEducation(@RequestBody NewEducationRequest request,
-    													@RequestParam String accountUuid) {
+    public ResponseEntity<AccountDTO> insertEducation(@RequestBody NewEducationRequest request) {
 
-        return ReturnResponse.entityCreated(accountService.insertEducation(request, accountUuid));
+        return ReturnResponse.entityCreated(accountService.insertEducation(request));
     	
     }
     
     @PostMapping("/work")
-    public ResponseEntity<AccountDTO> insertWorkExperience(@RequestBody NewWorkRequest request,
-    													@RequestParam String accountUuid) {
-    	return ReturnResponse.entityCreated(accountService.insertWork(request, accountUuid));
+    public ResponseEntity<AccountDTO> insertWorkExperience(@RequestBody NewWorkRequest request) {
+    	return ReturnResponse.entityCreated(accountService.insertWork(request));
     
     }
     
     @DeleteMapping("/work/{uuid}")
-    public ResponseEntity<AccountDTO> deleteWorkExperience(@PathVariable String uuid, @RequestParam String accountUuid) {
-    	return ReturnResponse.entityCreated(accountService.deleteWorkExperience(uuid, accountUuid));
+    public ResponseEntity<AccountDTO> deleteWorkExperience(@PathVariable String uuid) {
+    	return ReturnResponse.entityCreated(accountService.deleteWorkExperience(uuid));
     
     }
     
     @DeleteMapping("/education/{uuid}")
-    public ResponseEntity<AccountDTO> deleteEducation(@PathVariable String uuid, @RequestParam String accountUuid) {
-    	return ReturnResponse.entityCreated(accountService.deleteEducation(uuid, accountUuid));
+    public ResponseEntity<AccountDTO> deleteEducation(@PathVariable String uuid) {
+    	return ReturnResponse.entityCreated(accountService.deleteEducation(uuid));
     
     }
 

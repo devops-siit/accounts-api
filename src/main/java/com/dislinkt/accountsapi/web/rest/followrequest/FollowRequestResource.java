@@ -16,33 +16,29 @@ public class FollowRequestResource {
     @Autowired
     private FollowRequestService followRequestService;
 
-    @GetMapping("/{accountUuid}")
-    public ResponseEntity<Page<SimpleAccountDTO>> findByTargetAccount(@PathVariable String accountUuid,
-                                                                      Pageable pageable) {
-        return ReturnResponse.entityGet(followRequestService.findByTargetAccount(accountUuid, pageable));
+    @GetMapping
+    public ResponseEntity<Page<SimpleAccountDTO>> findByTargetAccount(Pageable pageable) {
+        return ReturnResponse.entityGet(followRequestService.findByTargetAccount(pageable));
     }
 
     @PostMapping("/{requestAccountUuid}")
-    public ResponseEntity insertFollowRequest(@PathVariable String requestAccountUuid,
-                                              @RequestParam String loggedUuid) {
+    public ResponseEntity insertFollowRequest(@PathVariable String requestAccountUuid) {
 
-        followRequestService.insertFollowRequest(requestAccountUuid, loggedUuid);
+        followRequestService.insertFollowRequest(requestAccountUuid);
         return ReturnResponse.entityCreated();
     }
 
     @PostMapping("/approve/{requestAccountUuid}")
-    public ResponseEntity approveFollowRequest(@PathVariable String requestAccountUuid,
-                                               @RequestParam String loggedUuid) {
+    public ResponseEntity approveFollowRequest(@PathVariable String requestAccountUuid) {
 
-        followRequestService.approveFollowRequest(requestAccountUuid, loggedUuid);
+        followRequestService.approveFollowRequest(requestAccountUuid);
         return ReturnResponse.entityCreated();
     }
 
     @PostMapping("/decline/{requestAccountUuid}")
-    public ResponseEntity declineFollowRequest(@PathVariable String requestAccountUuid,
-                                               @RequestParam String loggedUuid) {
+    public ResponseEntity declineFollowRequest(@PathVariable String requestAccountUuid) {
 
-        followRequestService.declineFollowRequest(requestAccountUuid, loggedUuid);
+        followRequestService.declineFollowRequest(requestAccountUuid);
         return ReturnResponse.entityCreated();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import com.dislinkt.accountsapi.domain.account.Account;
@@ -117,14 +119,10 @@ public class AccountService {
         return accountRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Account not found"));
     }
 
-    public AccountDTO editProfile(String accountUuid, EditProfileRequest request) {
-        Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+    public AccountDTO editProfile(EditProfileRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (accountOrEmpty.isEmpty()) {
-            throw new EntityNotFoundException("Account not found");
-        }
-
-        Account account = accountOrEmpty.get();
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
 
         account.getProfile().setName(request.getName());
         account.getProfile().setEmail(request.getEmail());
@@ -147,19 +145,17 @@ public class AccountService {
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
         accountDTO.setBiography(account.getProfile().getBiography());
+        accountDTO.setIsPublic(account.getProfile().getIsPublic());
 
         return accountDTO;
     }
     
-    public AccountDTO insertEducation(NewEducationRequest request, String accountUuid) {
-    	
-    	Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+    public AccountDTO insertEducation(NewEducationRequest request) {
 
-        if (accountOrEmpty.isEmpty()) {
-            throw new EntityNotFoundException("Account not found");
-        }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Account account = accountOrEmpty.get();
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
+
         EducationDTO savedEducation = educationService.insertEducation(request, account);
         
         Education education = educationService.findOneByUuidOrElseThrowException(savedEducation.getUuid()); 
@@ -186,14 +182,10 @@ public class AccountService {
     }
     
     
-    public AccountDTO insertWork(NewWorkRequest request, String accountUuid) {
-    	Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+    public AccountDTO insertWork(NewWorkRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (accountOrEmpty.isEmpty()) {
-            throw new EntityNotFoundException("Account not found");
-        }
-
-        Account account = accountOrEmpty.get();
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
         WorkDTO savedWork = workService.insertWorkExperience(request, account);
         
         Work work = workService.findOneByUuidOrElseThrowException(savedWork.getUuid()); 
@@ -218,38 +210,36 @@ public class AccountService {
     	return accountDTO;
     }
 
-	public AccountDTO deleteEducation(String uuid, String accountUuid) {
-		
-		Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+	public AccountDTO deleteEducation(String uuid) {
 
-        if (accountOrEmpty.isEmpty()) {
-            throw new EntityNotFoundException("Account not found");
-        }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
         
         educationService.deleteEducation(uuid); 
         
-        AccountDTO accDTO = findDTOByUuidOrElseThrowException(accountUuid);
+        AccountDTO accDTO = findDTOByUuidOrElseThrowException(account.getUuid());
 
         return accDTO;
 	}
 
-	public AccountDTO deleteWorkExperience(String uuid, String accountUuid) {
-		
-		Optional<Account> accountOrEmpty = accountRepository.findByUuid(accountUuid);
+	public AccountDTO deleteWorkExperience(String uuid) {
 
-        if (accountOrEmpty.isEmpty()) {
-            throw new EntityNotFoundException("Account not found");
-        }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
         workService.deleteWorkExperience(uuid); 
         
-        AccountDTO accDTO = findDTOByUuidOrElseThrowException(accountUuid);
+        AccountDTO accDTO = findDTOByUuidOrElseThrowException(account.getUuid());
 
         return accDTO;
 	}
-    
+
+    public Account findOneByUsernameOrThrowNotFoundException(String username) {
+        return accountRepository.findOneByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+    }
+
     public Optional<Account> findOneByUsername(String username) {
         return accountRepository.findOneByUsername(username);
     }

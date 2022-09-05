@@ -108,9 +108,11 @@ public class AccountService {
         accountDTO.setFollowingCount(account.getFollowingCount());
         
         // set educations
-        accountDTO.setEducation(educationService.toDTOset(account.getProfile().getEducation()));
+        if (account.getProfile().getEducation() != null)
+        	accountDTO.setEducation(educationService.toDTOset(account.getProfile().getEducation()));
         // set work experience
-        accountDTO.setWorkExperience(workService.toDTOset(account.getProfile().getWorkExperience()));
+        if (account.getProfile().getWorkExperience() != null)
+        	accountDTO.setWorkExperience(workService.toDTOset(account.getProfile().getWorkExperience()));
 
         return accountDTO;
     }

@@ -66,8 +66,8 @@ public class FollowRequestService {
 
         FollowRequest followRequest = new FollowRequest();
 
-        followRequest.setSourceAccount(account);
-        followRequest.setTargetAccount(requestAccount);
+        followRequest.setSourceAccount(requestAccount);
+        followRequest.setTargetAccount(account);
 
         followRequestRepository.save(followRequest);
     }
@@ -78,10 +78,10 @@ public class FollowRequestService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
-
+        // request account = source account
+        // logged user = target account
         Optional<FollowRequest> followRequest =
-                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.getId(),
-                        account.getId());
+                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(account.getId(),requestAccount.getId());
 
         if (followRequest.isEmpty()) {
             throw new EntityNotFoundException("Follow request not found");

@@ -1,6 +1,14 @@
 package com.dislinkt.accountsapi.service;
 
-import static com.dislinkt.accountsapi.constants.EducationConstants.*;
+import static com.dislinkt.accountsapi.constants.EducationConstants.DB_EDU_ACCOUNT_ID;
+import static com.dislinkt.accountsapi.constants.EducationConstants.DB_EDU_ACCOUNT_UUID;
+import static com.dislinkt.accountsapi.constants.EducationConstants.DB_EDU_UUID;
+import static com.dislinkt.accountsapi.constants.EducationConstants.NEW_EDU_DESCRIPTION;
+import static com.dislinkt.accountsapi.constants.EducationConstants.NEW_EDU_END_DATE;
+import static com.dislinkt.accountsapi.constants.EducationConstants.NEW_EDU_NAME;
+import static com.dislinkt.accountsapi.constants.EducationConstants.NEW_EDU_START_DATE;
+import static com.dislinkt.accountsapi.constants.EducationConstants.NEW_EDU_TITLE;
+import static com.dislinkt.accountsapi.constants.EducationConstants.NEW_EDU_UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -8,7 +16,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dislinkt.accountsapi.domain.account.Account;
@@ -20,6 +31,11 @@ import com.dislinkt.accountsapi.web.rest.base.DateRangeDTO;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@TestExecutionListeners(
+	    listeners = {TransactionalTestExecutionListener.class, DependencyInjectionTestExecutionListener.class},
+	    inheritListeners = false
+	    
+)
 public class EducationServiceIntegrationTest {
 
 	@Autowired

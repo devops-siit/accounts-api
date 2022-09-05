@@ -16,4 +16,3 @@ spring:
         ddl-auto: create
 
 
-

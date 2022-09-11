@@ -11,6 +11,8 @@ import com.dislinkt.accountsapi.web.rest.account.payload.SimpleAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,13 +29,15 @@ public class FollowRequestService {
     @Autowired
     private FollowService followService;
 
-    public void approveFollowRequest(String requestAccountUuid, String loggedUuid) {
+    public void approveFollowRequest(String requestAccountUuid) {
         Account requestAccount = accountService.findByUuidOrElseThrowException(requestAccountUuid);
 
-        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUuid);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
 
         Optional<FollowRequest> followRequest =
-                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(loggedAccount.getId(),
+                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(account.getId(),
                         requestAccount.getId());
 
         if (followRequest.isEmpty()) {
@@ -42,17 +46,19 @@ public class FollowRequestService {
 
         followRequestRepository.delete(followRequest.get());
 
-        followService.insertFollow(requestAccount, loggedAccount);
+        followService.insertFollow(requestAccount, account);
     }
 
-    public void insertFollowRequest(String requestAccountUuid, String loggedUuid) {
+    public void insertFollowRequest(String requestAccountUuid) {
         Account requestAccount = accountService.findByUuidOrElseThrowException(requestAccountUuid);
 
-        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUuid);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
 
         Optional<FollowRequest> followRequestOrEmpty =
                 followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.getId(),
-                        loggedAccount.getId());
+                        account.getId());
 
         if (followRequestOrEmpty.isPresent()) {
             throw new EntityAlreadyExistsException("Follow request already added");
@@ -60,20 +66,22 @@ public class FollowRequestService {
 
         FollowRequest followRequest = new FollowRequest();
 
-        followRequest.setSourceAccount(loggedAccount);
-        followRequest.setTargetAccount(requestAccount);
+        followRequest.setSourceAccount(requestAccount);
+        followRequest.setTargetAccount(account);
 
         followRequestRepository.save(followRequest);
     }
 
-    public void declineFollowRequest(String requestAccountUuid, String loggedUuid) {
+    public void declineFollowRequest(String requestAccountUuid) {
         Account requestAccount = accountService.findByUuidOrElseThrowException(requestAccountUuid);
 
-        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUuid);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
+        // request account = source account
+        // logged user = target account
         Optional<FollowRequest> followRequest =
-                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(requestAccount.getId(),
-                        loggedAccount.getId());
+                followRequestRepository.findOneByTargetAccountIdAndSourceAccountId(account.getId(),requestAccount.getId());
 
         if (followRequest.isEmpty()) {
             throw new EntityNotFoundException("Follow request not found");
@@ -82,11 +90,13 @@ public class FollowRequestService {
         followRequestRepository.delete(followRequest.get());
     }
 
-    public Page<SimpleAccountDTO> findByTargetAccount(String loggedUid, Pageable pageable) {
-        Account loggedAccount = accountService.findByUuidOrElseThrowException(loggedUid);
+    public Page<SimpleAccountDTO> findByTargetAccount(Pageable pageable) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
 
         Page<FollowRequest> followRequests =
-                followRequestRepository.findByTargetAccountId(loggedAccount.getId(), pageable);
+                followRequestRepository.findByTargetAccountId(account.getId(), pageable);
 
         return followRequests.map(followRequest -> {
             SimpleAccountDTO simpleAccountDTO = new SimpleAccountDTO();

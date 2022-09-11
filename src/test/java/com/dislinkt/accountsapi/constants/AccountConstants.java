@@ -12,6 +12,8 @@ public class AccountConstants {
 	public static final String DB_ACCOUNT_NAME_1 = "Jane J";
 	public static final String DB_ACCOUNT_EMAIL_1 = "strawberry@gmail.com";
 	public static final String DB_ACCOUNT_UUID_1 = "7c20fb12-40d8-4322-ba33-9c05203868e9";
+	public static final String DB_ACCOUNT_USERNAME_1 = "strawberry";
+	
 	public static final Boolean DB_ACCOUNT_IS_PUBLIC_1 = true;
 	public static final LocalDateTime DB_ACCOUNT_DATE_OF_BIRTH_1 = LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0, 0);
 	public static final String DB_ACCOUNT_BIOGRAPHY_1 = "living in Belgradde";
@@ -27,6 +29,7 @@ public class AccountConstants {
 	
 	// Elon Musk private
 	public static final String DB_ACCOUNT_UUID_3 = "7c20fb12-60d8-4322-ba33-9c05203868e9";
+	public static final String DB_ACCOUNT_USERNAME_3 = "spacex";
 	
 	public static final String DB_ACCOUNT_UUID_4 = "7c20fb12-70d8-4322-ba33-9c05203868e9";
 	

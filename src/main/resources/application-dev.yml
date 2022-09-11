@@ -2,15 +2,13 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5436/accounts-db
-    username: postgres
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/accounts-db?createDatabaseIfNotExist=true
+    username: root
     password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL95Dialect
   rabbitmq:
     host: localhost
     port: 5672

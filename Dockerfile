@@ -4,6 +4,6 @@ COPY pom.xml /
 RUN --mount=type=cache,target=/root/.m2 mvn -f /pom.xml clean package
 
 FROM openjdk:18-oracle
-COPY --from=build target/accounts-api-0.0.1-SNAPSHOT.jar /accounts-api-0.0.1.jar
+COPY --from=build target/*.jar /accounts-api.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "/accounts-api-0.0.1.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=dev", "/accounts-api.jar"]

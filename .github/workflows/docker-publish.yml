@@ -46,10 +46,12 @@ jobs:
       # Extract version
       - name: Get Version
         id: version
-        uses: mavrosxristoforos/get-xml-info@1.0
+        uses: actions/setup-java@v3
         with:
-          xml-file: 'lol.xml'
-          xpath: '/bookstore/version'
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+        run: mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

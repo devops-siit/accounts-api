@@ -48,8 +48,8 @@ jobs:
         id: meta
         uses: mavrosxristoforos/get-xml-info@1.0
         with:
-          xml-file: 'pomm.xml'
-          xpath: '//version'
+          xml-file: 'pom.xml'
+          xpath: '//project/version'
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action

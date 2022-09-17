@@ -3,6 +3,8 @@ name: Publish artifact
 on:
   push:
     branches: [ "develop", "master" ]
+  pull_request:
+    branches: [ "develop", "master" ]
 
 jobs:
 
@@ -21,3 +23,14 @@ jobs:
         run: mvn -B -P dev clean deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+      - name: Get Project Version
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - name:
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.MY_TOKEN }}
+          automatic_release_tag: ${{ env.VERSION }}
+          prerelease: true
+          title: "Release"
+          files: |
+            *.jar

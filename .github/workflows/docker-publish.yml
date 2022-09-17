@@ -49,7 +49,7 @@ jobs:
         uses: mavrosxristoforos/get-xml-info@1.0
         with:
           xml-file: 'lol.xml'
-          xpath: 'version'
+          xpath: '/bookstore/version'
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

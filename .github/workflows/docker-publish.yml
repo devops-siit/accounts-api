@@ -46,10 +46,10 @@ jobs:
       # Extract version
       - name: Get Version
         id: version
-        uses: QwerMike/xpath-action@v1
+        uses: mavrosxristoforos/get-xml-info@1.0
         with:
-          filename: 'pom.xml'
-          expression: '//project/version/text()'
+          xml-file: 'pom.xml'
+          xpath: '/project/version'
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

@@ -48,8 +48,8 @@ jobs:
         id: version
         uses: mavrosxristoforos/get-xml-info@1.0
         with:
-          xml-file: 'lol.xml'
-          xpath: '//bookstore/version'
+          xml-file: 'pom.xml'
+          xpath: '//project/version'
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

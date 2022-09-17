@@ -48,7 +48,7 @@ jobs:
         id: version
         uses: mavrosxristoforos/get-xml-info@1.0
         with:
-          xml-file: 'pom.xml'
+          xml-file: 'lol.xml'
           xpath: 'version'
 
       # Extract metadata (tags, labels) for Docker

@@ -51,8 +51,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Get version with Maven
-        id: version
-        run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+        run: VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -70,4 +69,4 @@ jobs:
         with:
           context: .
           push: true
-          tags:  ${{ format('quadrition/dislinkt-accounts-api:{0}', steps.version.outputs.info) }}
+          tags:  ${{ format('quadrition/dislinkt-accounts-api:{0}', env.VERSION) }}

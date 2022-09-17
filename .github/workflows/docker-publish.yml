@@ -67,4 +67,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ [format('***/dislinkt-accounts-api:{0}', steps.version.outputs.info)] }}
+          tags: [ ${{ format('***/dislinkt-accounts-api:{0}', steps.version.outputs.info)] }} ]

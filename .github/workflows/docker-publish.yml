@@ -51,7 +51,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Get version with Maven
-        run: VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

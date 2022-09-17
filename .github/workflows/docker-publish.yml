@@ -20,6 +20,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  # Version of the project
+  VERSION: 0.0.0
 
 jobs:
   build:
@@ -62,4 +64,3 @@ jobs:
           context: .
           push: true
           tags:  ${{ format('quadrition/dislinkt-accounts-api:{0}', env.VERSION) }}
-        run: echo ${{ env.VERSION }}

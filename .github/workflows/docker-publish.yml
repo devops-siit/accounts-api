@@ -67,4 +67,4 @@ jobs:
         with:
           context: .
           push: true
-          tags:  quadrition/dislinkt-accounts-api:6.6.6
+          tags:  ${{ format('quadrition/dislinkt-accounts-api:{0}', steps.version.outputs.info)] }}

@@ -58,6 +58,7 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
+          image: quadrition/dislinkt-accounts-api
           push: true
           tags: ${{ steps.meta.outputs.info }}
           labels: ${{ steps.meta.outputs.info }}

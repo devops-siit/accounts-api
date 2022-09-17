@@ -67,5 +67,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.version.outputs.info }}
-          labels: ${{ steps.version.outputs.info }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

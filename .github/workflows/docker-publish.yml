@@ -49,7 +49,7 @@ jobs:
         uses: QwerMike/xpath-action@v1
         with:
           filename: 'pom.xml'
-          expression: '//project/version'
+          expression: '//project/version/text()'
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action

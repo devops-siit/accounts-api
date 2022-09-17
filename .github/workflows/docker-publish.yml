@@ -20,8 +20,6 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  # Version of the project
-  VERSION: 0.0.0
 
 jobs:
   build:
@@ -53,7 +51,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Get version with Maven
-        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+        run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action

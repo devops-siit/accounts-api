@@ -190,7 +190,6 @@ public class AccountServiceIntegrationTest {
 	
 	@Test
 	@Transactional
-	@Rollback(true)
 	public void testInsertEducation() {
 		NewEducationRequest req = new NewEducationRequest();
 		req.setName(NEW_EDU_NAME);

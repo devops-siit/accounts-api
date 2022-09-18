@@ -221,26 +221,6 @@ public class AccountServiceIntegrationTest {
 		AccountDTO acc = service.insertWork(req);
 		assertEquals(2, acc.getWorkExperience().size());
 	}
-//	ovi testovi ne prolaze
- /*
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testDeleteEducation() {
-		
-		AccountDTO acc = service.deleteEducation(DB_EDU_UUID, DB_EDU_ACCOUNT_UUID);
 
-		assertEquals(0, acc.getEducation().size());
-	}
-	
-	@Test
-	@Transactional
-	@Rollback(true)
-	public void testDeleteWork() {
-		AccountDTO acc = service.deleteWorkExperience(DB_WORK_UUID, DB_WORK_ACCOUNT_UUID);
-		
-		assertEquals(0, acc.getWorkExperience().size());
-	}
-*/
 
 }

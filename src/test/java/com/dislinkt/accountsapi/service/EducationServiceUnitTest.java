@@ -75,7 +75,6 @@ public class EducationServiceUnitTest {
 		Account acc = new Account();
 		acc.setUuid(DB_EDU_ACCOUNT_UUID);
 		
-		
 		DateRange dateRange = new DateRange();
 		dateRange.setStartDate(NEW_EDU_START_DATE);
 		dateRange.setEndDate(NEW_EDU_END_DATE);

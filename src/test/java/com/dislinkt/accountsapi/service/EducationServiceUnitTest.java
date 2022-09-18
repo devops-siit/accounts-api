@@ -36,7 +36,7 @@ import com.dislinkt.accountsapi.service.education.EducationService;
 import com.dislinkt.accountsapi.web.rest.account.payload.EducationDTO;
 import com.dislinkt.accountsapi.web.rest.account.payload.request.NewEducationRequest;
 import com.dislinkt.accountsapi.web.rest.base.DateRangeDTO;
-
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -61,9 +61,7 @@ public class EducationServiceUnitTest {
 	}
 	
 	@Test
-	@Transactional
-	@Rollback(true)
-	public void testInsertAccount() {
+	public void testInsertEducation() {
 		
 		NewEducationRequest req = new NewEducationRequest();
 		req.setName(NEW_EDU_NAME);
@@ -79,16 +77,20 @@ public class EducationServiceUnitTest {
 		
 		
 		DateRange dateRange = new DateRange();
+		dateRange.setStartDate(NEW_EDU_START_DATE);
+		dateRange.setEndDate(NEW_EDU_END_DATE);
 		Education edu = new Education();
 		edu.setDescription(req.getDescription());
 		edu.setDuration(dateRange);
 		edu.setName(req.getName());
 		edu.setTitle(req.getTitle());
 		edu.setUuid(req.getUuid());
+		edu.setAccount(acc);
 		
-		when(repository.save(edu)).thenReturn(edu);
+		given(repository.save(edu)).willReturn(edu);
 		
 		EducationDTO saved = service.insertEducation(req, acc);
+		verify(repository, times(1)).save(edu);
 		assertEquals(req.getName(), saved.getName());
 	}
 	

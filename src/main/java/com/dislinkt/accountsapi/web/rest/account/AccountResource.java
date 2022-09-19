@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/accounts")
 public class AccountResource {
@@ -63,4 +65,20 @@ public class AccountResource {
     
     }
 
+    @GetMapping("/blocking")
+    public ResponseEntity<List<AccountDTO>> findAllBlockingAccounts() {
+        return ReturnResponse.entityGet(accountService.findAllBlockingAccounts());
+    }
+
+    @PatchMapping("/{uuid}/block")
+    public ResponseEntity blockAccount(@PathVariable String uuid) {
+        accountService.blockAccount(uuid);
+        return ReturnResponse.entityUpdated();
+    }
+
+    @PatchMapping("/{uuid}/unblock")
+    public ResponseEntity unblockAccount(@PathVariable String uuid) {
+        accountService.unblockAccount(uuid);
+        return ReturnResponse.entityUpdated();
+    }
 }

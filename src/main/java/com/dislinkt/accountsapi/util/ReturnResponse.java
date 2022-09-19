@@ -21,6 +21,10 @@ public class ReturnResponse {
         return new ResponseEntity<T>(obj, HttpStatus.OK);
     }
 
+    public static ResponseEntity entityUpdated() {
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     public static <T> ResponseEntity<T> entityNotFound() {
         return new ResponseEntity<T>(HttpStatus.NOT_FOUND);
     }

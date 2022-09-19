@@ -27,4 +27,16 @@ public class FollowResource {
                                                                       Pageable pageable) {
         return ReturnResponse.entityGet(followService.findBySourceAccount(accountUuid, pageable));
     }
+
+    @PatchMapping("/follow/{accountUuid}")
+    public ResponseEntity follow(@PathVariable String accountUuid) {
+        followService.follow(accountUuid);
+        return ReturnResponse.entityUpdated();
+    }
+
+    @PatchMapping("/unfollow/{accountUuid}")
+    public ResponseEntity unfollow(@PathVariable String accountUuid) {
+        followService.unfollow(accountUuid);
+        return ReturnResponse.entityUpdated();
+    }
 }

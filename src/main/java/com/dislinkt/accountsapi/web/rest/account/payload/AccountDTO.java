@@ -7,6 +7,7 @@ import java.util.Set;
 import com.dislinkt.accountsapi.domain.account.Gender;
 import com.dislinkt.accountsapi.web.rest.base.BaseDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 
@@ -23,6 +24,7 @@ public class AccountDTO extends BaseDTO {
 
     private Gender gender;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateOfBirth;
 
     private String biography;

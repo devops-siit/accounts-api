@@ -1,6 +1,9 @@
 package com.dislinkt.accountsapi.service.accounts;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.dislinkt.accountsapi.event.AccountCreatedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,8 +245,66 @@ public class AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
     }
 
+    public Account findOneByUuidOrThrowNotFoundException(String uuid) {
+        return accountRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+    }
+
     public Optional<Account> findOneByUsername(String username) {
         return accountRepository.findOneByUsername(username);
+    }
+
+    public List<AccountDTO> findAllBlockingAccounts() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
+
+        return account.getBlockedAccounts().stream().map(acc -> {
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setUsername(acc.getUsername());
+            accountDTO.setUuid(acc.getUuid());
+            accountDTO.setEmail(acc.getProfile().getEmail());
+            accountDTO.setGender(acc.getProfile().getGender());
+            accountDTO.setPhone(acc.getProfile().getPhone());
+            accountDTO.setUsername(acc.getUsername());
+            accountDTO.setDateOfBirth(acc.getProfile().getDateOfBirth());
+            accountDTO.setName(acc.getProfile().getName());
+            accountDTO.setFollowersCount(acc.getFollowersCount());
+            accountDTO.setFollowingCount(acc.getFollowingCount());
+
+            return accountDTO;
+        }).collect(Collectors.toList());
+    }
+
+    public void blockAccount(String accountUuid) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
+
+        Account blockAccount = findOneByUuidOrThrowNotFoundException(accountUuid);
+
+        if (blockAccount.getUuid().equals(account.getUuid())) {
+            throw new EntityAlreadyExistsException("Can't block yourself");
+        }
+
+        account.getBlockedAccounts().add(blockAccount);
+        accountRepository.save(account);
+    }
+
+    public void unblockAccount(String accountUuid) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = findOneByUsernameOrThrowNotFoundException(user.getUsername());
+
+        Account blockAccount = findOneByUuidOrThrowNotFoundException(accountUuid);
+
+        if (!account.getBlockedAccounts().contains(blockAccount)) {
+            throw new EntityNotFoundException("Account is not blocked");
+        }
+
+        account.getBlockedAccounts().remove(blockAccount);
+
+        accountRepository.save(account);
     }
 }
 

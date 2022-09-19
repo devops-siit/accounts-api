@@ -2,7 +2,6 @@ package com.dislinkt.accountsapi.service.accounts;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.dislinkt.accountsapi.event.AccountCreatedEvent;
@@ -87,6 +86,7 @@ public class AccountService {
             accountDTO.setUsername(accountDTO.getUsername());
             accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
             accountDTO.setName(account.getProfile().getName());
+            accountDTO.setBiography(account.getProfile().getBiography());
             accountDTO.setFollowersCount(account.getFollowersCount());
             accountDTO.setFollowingCount(account.getFollowingCount());
 
@@ -107,6 +107,7 @@ public class AccountService {
         accountDTO.setUsername(accountDTO.getUsername());
         accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
         accountDTO.setName(account.getProfile().getName());
+        accountDTO.setBiography(account.getProfile().getBiography());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
         
@@ -176,6 +177,7 @@ public class AccountService {
         accountDTO.setUsername(accountDTO.getUsername());
         accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
         accountDTO.setName(account.getProfile().getName());
+        accountDTO.setBiography(account.getProfile().getBiography());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
         
@@ -206,6 +208,7 @@ public class AccountService {
         accountDTO.setUsername(accountDTO.getUsername());
         accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
         accountDTO.setName(account.getProfile().getName());
+        accountDTO.setBiography(account.getProfile().getBiography());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
         
@@ -268,6 +271,7 @@ public class AccountService {
             accountDTO.setPhone(acc.getProfile().getPhone());
             accountDTO.setUsername(acc.getUsername());
             accountDTO.setDateOfBirth(acc.getProfile().getDateOfBirth());
+            accountDTO.setBiography(acc.getProfile().getBiography());
             accountDTO.setName(acc.getProfile().getName());
             accountDTO.setFollowersCount(acc.getFollowersCount());
             accountDTO.setFollowingCount(acc.getFollowingCount());

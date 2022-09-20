@@ -69,10 +69,6 @@ public class FollowService {
 
         Account account = accountService.findByUuidOrElseThrowException(accountUuid);
 
-        if (!account.getProfile().getIsPublic()) {
-            throw new EntityAlreadyExistsException("Account is private");
-        }
-
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Account logged = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());

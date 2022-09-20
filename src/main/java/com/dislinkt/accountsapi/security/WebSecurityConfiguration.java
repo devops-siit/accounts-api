@@ -4,6 +4,7 @@ import com.dislinkt.accountsapi.service.accounts.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,7 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .anyRequest().authenticated().and()
+                .antMatchers(HttpMethod.GET, "/accounts/search").permitAll().anyRequest().authenticated().and()
                 .addFilterBefore(new TokenAuthenticationFilter(accountService), BasicAuthenticationFilter.class).cors()
                 .and().csrf().disable();
     }

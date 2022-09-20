@@ -17,8 +17,8 @@ public class FollowRequestResource {
     private FollowRequestService followRequestService;
 
     @GetMapping
-    public ResponseEntity<Page<SimpleAccountDTO>> findByTargetAccount(Pageable pageable) {
-        return ReturnResponse.entityGet(followRequestService.findByTargetAccount(pageable));
+    public ResponseEntity<Page<SimpleAccountDTO>> findBySourceAccount(Pageable pageable) {
+        return ReturnResponse.entityGet(followRequestService.findBySourceAccount(pageable));
     }
 
     @PostMapping("/{requestAccountUuid}")

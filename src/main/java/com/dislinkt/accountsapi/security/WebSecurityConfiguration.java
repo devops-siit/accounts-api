@@ -34,7 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/accounts/search").permitAll().anyRequest().authenticated().and()
+                .antMatchers(HttpMethod.GET, "/accounts//public-search").permitAll().anyRequest().authenticated().and()
                 .addFilterBefore(new TokenAuthenticationFilter(accountService), BasicAuthenticationFilter.class).cors()
                 .and().csrf().disable();
     }

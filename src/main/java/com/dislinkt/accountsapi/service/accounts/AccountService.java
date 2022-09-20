@@ -84,6 +84,29 @@ public class AccountService {
             accountDTO.setGender(account.getProfile().getGender());
             accountDTO.setPhone(account.getProfile().getPhone());
             accountDTO.setUsername(accountDTO.getUsername());
+            accountDTO.setIsPublic(account.getProfile().getIsPublic());
+            accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
+            accountDTO.setName(account.getProfile().getName());
+            accountDTO.setBiography(account.getProfile().getBiography());
+            accountDTO.setFollowersCount(account.getFollowersCount());
+            accountDTO.setFollowingCount(account.getFollowingCount());
+
+            return accountDTO;
+        });
+    }
+
+    public Page<AccountDTO> publicSearch(String pattern, Pageable pageable) {
+        return accountRepository.findByUsernameContainsOrProfileNameContainsAndProfileIsPublicEquals(pattern,
+                pattern, true,
+                pageable).map(account -> {
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setUsername(account.getUsername());
+            accountDTO.setUuid(account.getUuid());
+            accountDTO.setEmail(account.getProfile().getEmail());
+            accountDTO.setGender(account.getProfile().getGender());
+            accountDTO.setPhone(account.getProfile().getPhone());
+            accountDTO.setUsername(accountDTO.getUsername());
+            accountDTO.setIsPublic(account.getProfile().getIsPublic());
             accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
             accountDTO.setName(account.getProfile().getName());
             accountDTO.setBiography(account.getProfile().getBiography());
@@ -107,6 +130,7 @@ public class AccountService {
         accountDTO.setUsername(accountDTO.getUsername());
         accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
         accountDTO.setName(account.getProfile().getName());
+        accountDTO.setIsPublic(account.getProfile().getIsPublic());
         accountDTO.setBiography(account.getProfile().getBiography());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
@@ -177,6 +201,7 @@ public class AccountService {
         accountDTO.setUsername(accountDTO.getUsername());
         accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
         accountDTO.setName(account.getProfile().getName());
+        accountDTO.setIsPublic(account.getProfile().getIsPublic());
         accountDTO.setBiography(account.getProfile().getBiography());
         accountDTO.setFollowersCount(account.getFollowersCount());
         accountDTO.setFollowingCount(account.getFollowingCount());
@@ -206,6 +231,7 @@ public class AccountService {
         accountDTO.setGender(account.getProfile().getGender());
         accountDTO.setPhone(account.getProfile().getPhone());
         accountDTO.setUsername(accountDTO.getUsername());
+        accountDTO.setIsPublic(account.getProfile().getIsPublic());
         accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
         accountDTO.setName(account.getProfile().getName());
         accountDTO.setBiography(account.getProfile().getBiography());

@@ -23,6 +23,11 @@ public class AccountResource {
     @Autowired
     private AccountService accountService;
 
+    @GetMapping("/public-search")
+    public ResponseEntity<Page<AccountDTO>> publicSearch(@RequestParam String pattern, Pageable pageable) {
+        return ReturnResponse.entityGet(accountService.publicSearch(pattern, pageable));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<Page<AccountDTO>> findByUsernameContainsOrNameContains(@RequestParam String pattern,
                                                                               Pageable pageable) {

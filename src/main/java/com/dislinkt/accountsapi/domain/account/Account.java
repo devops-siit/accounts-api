@@ -14,6 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Table(name = "account")
 public class Account extends BaseEntity {
 
     @NotNull

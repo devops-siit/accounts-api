@@ -78,7 +78,7 @@ public class FollowRequestServiceIntegrationTest {
 		Pageable pageable = PageRequest.of(PAGEABLE_PAGE, PAGEABLE_SIZE);
 		Page<SimpleAccountDTO> found = service.findByTargetAccount(pageable);
 		
-		assertEquals(2, found.getNumberOfElements());
+		assertEquals(1, found.getNumberOfElements());
 	}
 	
 	@Test

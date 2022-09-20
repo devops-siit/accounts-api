@@ -18,4 +18,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findOneByUsername(String username);
 
     Optional<Account> findOneByProfileEmail(String email);
+
+    Page<Account> findByUsernameContainsOrProfileNameContainsAndProfileIsPublicEquals(String username, String name, boolean isPublic, Pageable pageable);
 }

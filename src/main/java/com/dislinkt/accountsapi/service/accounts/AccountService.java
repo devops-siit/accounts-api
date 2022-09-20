@@ -94,6 +94,27 @@ public class AccountService {
         });
     }
 
+    public Page<AccountDTO> publicSearch(String pattern, Pageable pageable) {
+        return accountRepository.findByUsernameContainsOrProfileNameContainsAndProfileIsPublicEquals(pattern,
+                pattern, true,
+                pageable).map(account -> {
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.setUsername(account.getUsername());
+            accountDTO.setUuid(account.getUuid());
+            accountDTO.setEmail(account.getProfile().getEmail());
+            accountDTO.setGender(account.getProfile().getGender());
+            accountDTO.setPhone(account.getProfile().getPhone());
+            accountDTO.setUsername(accountDTO.getUsername());
+            accountDTO.setDateOfBirth(account.getProfile().getDateOfBirth());
+            accountDTO.setName(account.getProfile().getName());
+            accountDTO.setBiography(account.getProfile().getBiography());
+            accountDTO.setFollowersCount(account.getFollowersCount());
+            accountDTO.setFollowingCount(account.getFollowingCount());
+
+            return accountDTO;
+        });
+    }
+
     public AccountDTO findDTOByUuidOrElseThrowException(String uuid) {
         Account account = accountRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));

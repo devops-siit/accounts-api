@@ -14,7 +14,7 @@ public class EditProfileRequest {
 
     private Gender gender;
     
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dateOfBirth;
 
     private String biography;

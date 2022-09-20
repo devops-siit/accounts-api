@@ -14,4 +14,6 @@ public interface FollowRequestRepository extends JpaRepository<FollowRequest, Lo
     Page<FollowRequest> findByTargetAccountId(Long targetAccountId, Pageable pageable);
 
     Optional<FollowRequest> findOneByTargetAccountIdAndSourceAccountId(Long targetAccountId, Long sourceAccountId);
+    
+    Page<FollowRequest> findBySourceAccountId(Long sourceAccountId, Pageable pageable);
 }

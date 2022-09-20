@@ -96,6 +96,24 @@ public class FollowRequestService {
         Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
 
         Page<FollowRequest> followRequests =
+                followRequestRepository.findByTargetAccountId(account.getId(), pageable);
+
+        return followRequests.map(followRequest -> {
+            SimpleAccountDTO simpleAccountDTO = new SimpleAccountDTO();
+
+            simpleAccountDTO.setUsername(followRequest.getSourceAccount().getUsername());
+            simpleAccountDTO.setName(followRequest.getSourceAccount().getProfile().getName());
+            simpleAccountDTO.setUuid(followRequest.getSourceAccount().getUuid());
+
+            return simpleAccountDTO;
+        });
+    }
+    public Page<SimpleAccountDTO> findBySourceAccount(Pageable pageable) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
+
+        Page<FollowRequest> followRequests =
                 followRequestRepository.findBySourceAccountId(account.getId(), pageable);
 
         return followRequests.map(followRequest -> {

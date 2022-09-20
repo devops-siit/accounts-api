@@ -96,7 +96,7 @@ public class FollowRequestService {
         Account account = accountService.findOneByUsernameOrThrowNotFoundException(user.getUsername());
 
         Page<FollowRequest> followRequests =
-                followRequestRepository.findByTargetAccountId(account.getId(), pageable);
+                followRequestRepository.findBySourceAccountId(account.getId(), pageable);
 
         return followRequests.map(followRequest -> {
             SimpleAccountDTO simpleAccountDTO = new SimpleAccountDTO();

@@ -66,8 +66,8 @@ public class FollowRequestService {
 
         FollowRequest followRequest = new FollowRequest();
 
-        followRequest.setSourceAccount(requestAccount);
-        followRequest.setTargetAccount(account);
+        followRequest.setSourceAccount(account);
+        followRequest.setTargetAccount(requestAccount);
 
         followRequestRepository.save(followRequest);
     }
